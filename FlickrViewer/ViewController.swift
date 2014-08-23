@@ -39,7 +39,7 @@ class ViewController: UIViewController {
             
             flickr.searchFlickrForString(searchTextField.text, completion: { (searchString:String!, flickerPhotos:NSMutableArray!, error:NSError!) -> () in
             
-                if !error {
+                if !(error != nil) {
                     
                     let flickrPhoto:FlickrPhoto = flickerPhotos.objectAtIndex(Int(arc4random_uniform(UInt32(flickerPhotos.count)))) as FlickrPhoto
                     

@@ -13,7 +13,8 @@ class FlickrHelper: NSObject {
     class func URLForSearchString(Suchbergriff searchString: String) -> String {
         
         let apiKey:String = "a77071aee2e61cda4756402f2774ff95"
-        let search:String = searchString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        let search:String = searchString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        let s:String? = search.stringByAddingPercentEscapesUsingEncoding(NSUTF32StringEncoding)
         let returnValue:String = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=\(apiKey)&text=\(search)&per_page=1&format=json&nojsoncallback=1"
         
         return returnValue
@@ -65,12 +66,16 @@ class FlickrHelper: NSObject {
                     
                     if status == "fail" {
                         
-                        let error:NSError? = NSError(domain: "FlickrSearch", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey:resultDict.objectForKey("message")])
+                        let messageString:String = resultDict.objectForKey("message") as String
+                        
+                        let error:NSError? = NSError(domain: "FlickrSearch", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey:messageString])
                         completion(searchString: searchStr, flickerPhotos: nil, error: error)
                         
                     } else {
                         
-                        let resultArray:NSArray = resultDict.objectForKey("photos").objectForKey("photo") as NSArray
+                        let photosDict:NSDictionary = resultDict.objectForKey("photos") as NSDictionary
+                        
+                        let resultArray:NSArray = photosDict.objectForKey("photo") as NSArray
                         let flickrPhotos:NSMutableArray = NSMutableArray()
                         
                         for photoObject in resultArray {
